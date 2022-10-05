@@ -8,7 +8,16 @@ defmodule SocketWeb.JoinChannel do
 
   @impl true
   def handle_in("shout", payload, socket) do
-    broadcast(socket, "shout", payload)
+    {username} = payload
+
+    position = {
+      x: :rand.uniform(1000),
+      y: :rand.uniform(1000),
+    }
+
+    IO.puts({username: username, position})
+
+    broadcast(socket, "shout", {username: username, position})
     {:noreply, socket}
   end
 end

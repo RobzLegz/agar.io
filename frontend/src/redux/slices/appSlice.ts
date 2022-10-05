@@ -1,21 +1,29 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+export interface User{
+    username: string;
+    position: {
+        x: number;
+        y: number;
+    }
+}
+
 export interface AppInfo {
-    joined: boolean;
+    users: User[];
 }
 
 const initialState: AppInfo = {
-    joined: false,
+    users: [],
 };
 
 export const appSlice = createSlice({
     name: 'app',
     initialState,
     reducers: {
-        handleJoined: (state, action) => {
+        receiveUser: (state, action) => {
             state = {
                 ...state,
-                joined: action.payload,
+                users: [...state.users, action.payload],
             };
 
             return state;
@@ -23,7 +31,7 @@ export const appSlice = createSlice({
     },
 });
 
-export const { handleJoined } = appSlice.actions;
+export const { receiveUser } = appSlice.actions;
 
 export const selectApp = (state: any) => state.app;
 

@@ -10,6 +10,7 @@ import {
 } from '../redux/slices/socketSlice';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import { receiveUser } from '../redux/slices/appSlice';
 
 const JoinHandler = () => {
     const dispatch = useDispatch();
@@ -27,10 +28,13 @@ const JoinHandler = () => {
 
     const handleJoin = (e: React.MouseEvent) => {
         e.preventDefault();
-        
-        if (joinChan) {
-            joinChan?.push('shout', { username: username });
 
+        if (joinChan) {
+          console.log(joinChan)
+            joinChan?.push('shout', { username: username });
+            joinChan?.on('shout', (payload) => {
+                dispatch(receiveUser(payload));
+            });
             router.push('/ffa');
         }
     };
