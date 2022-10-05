@@ -2,6 +2,8 @@ defmodule SocketWeb.UserSocket do
   use Phoenix.Socket
 
   channel "upload:*", SocketWeb.UploadChannel
+  channel "move:*", SocketWeb.MoveChannel
+  channel "eat:*", SocketWeb.EatChannel
 
   # A Socket handler
   #
