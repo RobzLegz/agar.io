@@ -1,0 +1,9 @@
+{
+  "name": "agar.io",
+  "scripts": {
+    "dev": "cd frontend && yarn dev",
+    "f": "cd frontend && yarn dev",
+    "b": "cd socket && mix.phx.server",
+    "s": "cd socket && mix.phx.server"
+  }
+}
