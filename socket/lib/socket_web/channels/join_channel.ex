@@ -1,8 +1,8 @@
-defmodule SocketWeb.UploadChannel do
+defmodule SocketWeb.JoinChannel do
   use SocketWeb, :channel
 
   @impl true
-  def join("upload:lobby", _payload, socket) do
+  def join("join:lobby", _payload, socket) do
     {:ok, socket}
   end
 

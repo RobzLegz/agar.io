@@ -4,6 +4,7 @@ defmodule SocketWeb.UserSocket do
   channel "upload:*", SocketWeb.UploadChannel
   channel "move:*", SocketWeb.MoveChannel
   channel "eat:*", SocketWeb.EatChannel
+  channel "join:*", SocketWeb.JoinChannel
 
   # A Socket handler
   #
