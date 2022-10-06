@@ -6,6 +6,6 @@ defmodule SocketWeb.PageController do
   end
 
   def game(conn, _params) do
-    render(conn, "game.html")
+    render(conn, "game.html", page_title: "Play")
   end
 end
