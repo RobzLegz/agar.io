@@ -4,9 +4,14 @@ const canvas: HTMLCanvasElement = docCanvas as HTMLCanvasElement;
 
 const ctx = canvas.getContext('2d');
 
-interface Blob {}
+export interface Blob {
+    pos: {
+        x: number;
+        y: number;
+    }
+}
 
-function blob({ x, y, size }: { x: number; y: number, size: number }) {
+const Blob = function(this: Blob, x: number, y: number, size: number) {
     if (ctx) {
         ctx.beginPath();
         ctx.arc(x, y, size, 0, 2 * Math.PI);
@@ -16,4 +21,4 @@ function blob({ x, y, size }: { x: number; y: number, size: number }) {
     }
 }
 
-export default blob;
+export default Blob;

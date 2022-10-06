@@ -1,4 +1,4 @@
-import blob from "./blob";
+import Blob from "./blob";
 
 const docCanvas = document.getElementById('canvas');
 
@@ -18,7 +18,7 @@ const game = () => {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
-    blob({x: 100, y: 100, size: 100});
+    Blob(100, 100, 100);
 };
 
 export default game;
