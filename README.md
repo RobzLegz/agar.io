@@ -1,4 +1,4 @@
-# Socket
+# Agar.io
 
 To start your Phoenix server:
 
