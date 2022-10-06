@@ -4,20 +4,30 @@ const canvas: HTMLCanvasElement = docCanvas as HTMLCanvasElement;
 
 const ctx = canvas.getContext('2d');
 
-export interface Blob {
+export interface BlobInterface {
     pos: {
         x: number;
         y: number;
-    }
+    };
+    size: number;
+    draw: () => void;
 }
 
-const Blob = function(this: Blob, x: number, y: number, size: number) {
-    if (ctx) {
-        ctx.beginPath();
-        ctx.arc(x, y, size, 0, 2 * Math.PI);
-        ctx.fillStyle = "#ffffff"
-        ctx.stroke();
-        ctx.fill()
+class Blob {
+    constructor(public x: number, public y: number, public r: number) {
+        this.x = x;
+        this.y = y;
+        this.r = r;
+    }
+
+    draw() {
+        if (ctx) {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
+            ctx.fillStyle = '#ffffff';
+            ctx.stroke();
+            ctx.fill();
+        }
     }
 }
 
