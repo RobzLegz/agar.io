@@ -14,6 +14,7 @@ const game = () => {
 
     const blob = new Blob(canvas.width / 2, canvas.height / 2, 50);
     blob.draw();
+
     blob.update();
 };
 

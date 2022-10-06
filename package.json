@@ -1,7 +1,7 @@
 {
   "name": "agar.io",
   "scripts": {
-    "s": "cd socket && mix.phx.server"
+    "dev": "mix phx.server"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.18.6",

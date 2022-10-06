@@ -4,30 +4,28 @@ const canvas: HTMLCanvasElement = docCanvas as HTMLCanvasElement;
 
 const ctx = canvas.getContext('2d');
 
-// export interface BlobInterface {
-//     pos: {
-//         x: number;
-//         y: number;
-//     };
-//     size: number;
-//     draw: () => void;
-//     update: () => void;
-// }
-
 class Blob {
+    speed: number;
+
     constructor(public x: number, public y: number, public r: number) {
         this.x = x;
         this.y = y;
         this.r = r;
+        this.speed = 1;
     }
 
     draw() {
         if (ctx) {
+            ctx.clearRect(this.x - this.r,
+                this.y - this.r,
+                this.r * 2,
+                this.r * 2);
+            
             ctx.beginPath();
-            ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
+            ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI, false);
             ctx.fillStyle = '#ffffff';
-            ctx.stroke();
             ctx.fill();
+            ctx.stroke();
         }
     }
 
@@ -40,28 +38,22 @@ class Blob {
 
             mouseX = clientX;
             mouseY = clientY;
-
-            ctx?.lineTo(mouseX, mouseY);
-
-            // console.log(clientX, clientY);
         });
 
-        const a = mouseX - this.x;
-        const b = mouseY - this.y;
-        const c = Math.floor(Math.sqrt(a * a + b * b));
+        setInterval(() => {
+            const a = mouseX - this.x;
+            const b = mouseY - this.y;
+            const c = Math.floor(Math.sqrt(a * a + b * b));
 
-        // const angleB = Math.acos((a*a + c*c - b*b) / (2*a*c))
+            const rad = 180 / Math.PI;
 
-        // const deg = Math.floor(Math.sin((a*a + c*c - b*b) / (2*a*c)) * 100)
+            const angle = Math.asin(a / c) * rad;
 
+            this.x += this.speed * Math.cos(angle);
+            this.y += this.speed * Math.sin(angle);
 
-        // const angleB = Math.acos(((c*c) + (a*a) - (b*b))/(2*c*a));
-        const angleB = Math.acos(((5*5) + (3*3) - (4*4))/(2*5*3));
-
-
-
-        // const def = Math.sin(0.86)
-        console.log(angleB)
+            this.draw();
+        }, 1000 / 60);
     }
 }
 
