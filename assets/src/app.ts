@@ -12,22 +12,23 @@ const { innerHeight, innerWidth } = window;
 
 const wWidth = innerWidth;
 const wHeight = innerHeight;
+const P = 300;
 
 let blobs: Blob[] = [];
 
-window.addEventListener("resize", () => {
+window.addEventListener('resize', () => {
     setup();
-})
+});
 
 const game = () => {
     setup();
-
-    drawBlobs();
 
     const blob = new Blob(wWidth / 2, wHeight / 2, 50);
     blob.draw();
 
     blob.update(0);
+
+    incBlobs();
 };
 
 const setup = () => {
@@ -43,29 +44,33 @@ const setup = () => {
 
         // drawGrid();
     }
-
-    setInterval(() => {
-        for (let i = 0; i < 20; i++) {
-            const x = genRandBetween(0, canvas.width);
-            const y = genRandBetween(0, canvas.height);
-    
-            const newBlob = new Blob(x, y, 6);
-    
-            blobs = [...blobs, newBlob];
-        }
-    }, 1000)
 };
 
-const drawBlobs = () => {
+const incBlobs = () => {
+    setInterval(() => {
+        for (let i = 0; i < 20; i++) {
+            const x = genRandBetween(P, canvas.width - P);
+            const y = genRandBetween(P, canvas.height - P);
+
+            const newBlob = new Blob(x, y, 6);
+
+            blobs = [...blobs, newBlob];
+        }
+    }, 4000);
+};
+
+const drawBlobs = (blob: Blob) => {
     for (let i = blobs.length - 1; i > 0; i--) {
-        blobs[i].draw();
+        const nBlob = blobs[i];
+
+        nBlob.draw();
+
+        if (blob.eats(nBlob)) {
+            blobs.splice(i, 1);
+            console.log(blobs)
+        } 
     }
 };
 
 export default game;
-export {
-    blobs,
-    drawBlobs,
-    wWidth,
-    wHeight
-}
+export { blobs, drawBlobs, wWidth, wHeight, P };

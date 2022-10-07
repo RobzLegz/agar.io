@@ -1,12 +1,10 @@
-import { blobs, drawBlobs, wHeight, wWidth } from './app';
+import { blobs, drawBlobs, P, wHeight, wWidth } from './app';
 
 const docCanvas = document.getElementById('canvas');
 
 const canvas: HTMLCanvasElement = docCanvas as HTMLCanvasElement;
 
 const ctx = canvas.getContext('2d');
-
-const P = 300;
 
 let mouseX = 0;
 let mouseY = 0;
@@ -35,7 +33,7 @@ class Blob {
         this.x = x;
         this.y = y;
         this.r = r;
-        this.speed = 1;
+        this.speed = 5;
         this.lastTime = 0;
         this.interval = 1;
         this.timer = 0;
@@ -58,10 +56,13 @@ class Blob {
     }
 
     update(timestamp: number) {
-        setInterval(() => {
+        const delta = timestamp - this.lastTime;
+        this.lastTime = timestamp;
+
+        if (this.timer > this.interval) {
             const rotation = Math.atan2(
-                mouseY - wWidth / 2,
-                mouseX - wHeight / 2
+                mouseY - wHeight / 2,
+                mouseX - wWidth / 2
             );
 
             const newX = this.x + this.speed * Math.cos(rotation);
@@ -82,45 +83,38 @@ class Blob {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = '#000000';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
-                drawBlobs();
+                drawBlobs(this);
             }
 
             this.draw();
-        }, 1000 / 60);
+
+            this.timer = 0;
+        } else {
+            this.timer += delta;
+        }
+
+        moveAnim = requestAnimationFrame(this.update.bind(this));
     }
 
-    // update(timestamp: number) {
-    //     const delta = timestamp - this.lastTime;
-    //     this.lastTime = timestamp;
+    eats(blob: Blob) {
+        let dX = this.x - blob.x;
+        let dY = this.y - blob.y;
 
-    //     if (this.timer > this.interval) {
-    //         const a = mouseX - this.x;
-    //         const b = mouseY - this.y;
-    //         const c = Math.floor(Math.sqrt(a * a + b * b));
+        if (dX < 0) {
+            dX = -dX;
+        }
 
-    //         const rad = 180 / Math.PI;
+        if (dY < 0) {
+            dY = -dY;
+        }
 
-    //         const angle = Math.asin(a / c) * rad;
-
-    //         this.x += this.speed * Math.cos(angle);
-    //         this.y += this.speed * Math.sin(angle);
-
-    //         if (ctx) {
-    //             ctx.clearRect(0, 0, canvas.width, wHeight);
-    //             ctx.fillStyle = '#000000';
-    //             ctx.fillRect(0, 0, canvas.width, wHeight);
-    //             drawBlobs();
-    //         }
-
-    //         this.draw();
-
-    //         this.timer = 0;
-    //     } else {
-    //         this.timer += delta;
-    //     }
-
-    //     moveAnim = requestAnimationFrame(this.update.bind(this));
-    // }
+        if (dX < blob.r + this.r && dY < blob.r + this.r) {
+            this.r += blob.r;
+            return true;
+        }else{
+            return false;
+        }
+    }
 }
 
 export default Blob;
