@@ -78,7 +78,7 @@ class Blob {
             }
 
             if (ctx) {
-                this.zoom = 50 / this.r;
+                this.zoom = 70 / this.r;
 
                 this.speed = 5 * this.zoom ;
 
