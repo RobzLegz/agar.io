@@ -79,15 +79,16 @@ class Blob {
             }
 
             if (ctx) {
-                this.zoom = 25 / this.r;
+                this.zoom = 50 / this.r;
 
-                this.speed = 5 * this.zoom;
+                this.speed = 5 * this.zoom ;
 
                 ctx.resetTransform();
                 ctx.restore();
-                // ctx.translate(-canvas.width / 2, - canvas.height / 2);
-                // ctx.scale(zoom, zoom);
-                ctx.translate(wWidth / 2 - this.x, wHeight / 2 - this.y);
+                ctx.translate(wWidth / 2 - this.x * this.zoom, wHeight / 2 - this.y * this.zoom);
+                // ctx.translate(wWidth / 2, wHeight / 2);
+                ctx.scale(this.zoom, this.zoom);
+                // ctx.translate(wWidth / 2 - this.x, wHeight / 2 - this.y);
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = '#000000';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
