@@ -1,10 +1,12 @@
-import { blobs, drawBlobs } from './app';
+import { blobs, drawBlobs, wHeight, wWidth } from './app';
 
 const docCanvas = document.getElementById('canvas');
 
 const canvas: HTMLCanvasElement = docCanvas as HTMLCanvasElement;
 
 const ctx = canvas.getContext('2d');
+
+const P = 300;
 
 let mouseX = 0;
 let mouseY = 0;
@@ -57,16 +59,26 @@ class Blob {
 
     update(timestamp: number) {
         setInterval(() => {
-            const a = mouseX - this.x;
-            const b = mouseY - this.y;
-            const c = Math.floor(Math.sqrt(a * a + b * b));
+            const rotation = Math.atan2(
+                mouseY - wWidth / 2,
+                mouseX - wHeight / 2
+            );
 
-            const rotation = Math.atan2(mouseY - this.y, mouseX - this.x);
+            const newX = this.x + this.speed * Math.cos(rotation);
+            const newY = this.y + this.speed * Math.sin(rotation);
 
-            this.x += this.speed * Math.cos(rotation);
-            this.y += this.speed * Math.sin(rotation);
+            if (newX > P && newX < canvas.width - P) {
+                this.x = newX;
+            }
+
+            if (newY > P && newY < canvas.height - P) {
+                this.y = newY;
+            }
 
             if (ctx) {
+                ctx.resetTransform();
+                ctx.restore();
+                ctx.translate(wWidth / 2 - this.x, wHeight / 2 - this.y);
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = '#000000';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -94,9 +106,9 @@ class Blob {
     //         this.y += this.speed * Math.sin(angle);
 
     //         if (ctx) {
-    //             ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //             ctx.clearRect(0, 0, canvas.width, wHeight);
     //             ctx.fillStyle = '#000000';
-    //             ctx.fillRect(0, 0, canvas.width, canvas.height);
+    //             ctx.fillRect(0, 0, canvas.width, wHeight);
     //             drawBlobs();
     //         }
 
