@@ -1,35 +1,42 @@
 import Blob from './blob';
+import { drawGrid } from './grid';
 import { genRandBetween } from './utils/genRandBetween';
 
 const docCanvas = document.getElementById('canvas');
 
 const canvas: HTMLCanvasElement = docCanvas as HTMLCanvasElement;
 
+const ctx = canvas.getContext('2d');
+
 let blobs: Blob[] = [];
+
+window.addEventListener("resize", () => {
+    setup();
+})
 
 const game = () => {
     setup();
 
-    draw();
+    drawBlobs();
 
     const blob = new Blob(canvas.width / 2, canvas.height / 2, 50);
     blob.draw();
 
-    blob.update();
+    blob.update(0);
 };
 
 const setup = () => {
-    const ctx = canvas.getContext('2d');
 
     const { innerHeight, innerWidth } = window;
 
     canvas.width = innerWidth;
     canvas.height = innerHeight;
-
     if (ctx) {
         ctx.fillStyle = '#000000';
 
         ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        drawGrid();
     }
 
     for (let i = 0; i < 20; i++) {
@@ -42,10 +49,14 @@ const setup = () => {
     }
 };
 
-const draw = () => {
+const drawBlobs = () => {
     for (let i = blobs.length - 1; i > 0; i--) {
         blobs[i].draw();
     }
 };
 
 export default game;
+export {
+    blobs,
+    drawBlobs
+}
