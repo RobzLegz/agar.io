@@ -1,4 +1,5 @@
 import { blobs, drawBlobs, P, wHeight, wWidth } from './app';
+import { getColor } from './colors';
 
 const docCanvas = document.getElementById('canvas');
 
@@ -29,6 +30,7 @@ class Blob {
     interval: number;
     timer: number;
     zoom: number;
+    color: string;
 
     constructor(public x: number, public y: number, public r: number) {
         this.x = x;
@@ -39,21 +41,18 @@ class Blob {
         this.interval = 1;
         this.timer = 0;
         this.zoom = 25/r;
+        this.color = getColor();
     }
 
     draw() {
         if (ctx) {
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI, false);
-            ctx.fillStyle = '#000000';
+            ctx.fillStyle = this.color;
             ctx.fill();
             ctx.stroke();
 
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI, false);
-            ctx.fillStyle = '#ffffff';
-            ctx.fill();
-            ctx.stroke();
+            
         }
     }
 
