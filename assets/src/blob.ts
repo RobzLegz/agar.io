@@ -81,7 +81,7 @@ class Blob {
             if (ctx) {
                 this.zoom = 25 / this.r;
 
-                this.speed = 5 / this.zoom;
+                this.speed = 5 * this.zoom;
 
                 ctx.resetTransform();
                 ctx.restore();
