@@ -23,7 +23,7 @@ window.addEventListener('resize', () => {
 const game = () => {
     setup();
 
-    const blob = new Blob(wWidth / 2, wHeight / 2, 50);
+    const blob = new Blob(wWidth / 2, wHeight / 2, 25);
     blob.draw();
 
     blob.update(0);
@@ -52,7 +52,7 @@ const incBlobs = () => {
             const x = genRandBetween(P, canvas.width - P);
             const y = genRandBetween(P, canvas.height - P);
 
-            const newBlob = new Blob(x, y, 6);
+            const newBlob = new Blob(x, y, 10);
 
             blobs = [...blobs, newBlob];
         }
@@ -67,7 +67,6 @@ const drawBlobs = (blob: Blob) => {
 
         if (blob.eats(nBlob)) {
             blobs.splice(i, 1);
-            console.log(blobs)
         } 
     }
 };

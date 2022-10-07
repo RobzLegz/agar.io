@@ -28,6 +28,7 @@ class Blob {
     lastTime: number;
     interval: number;
     timer: number;
+    zoom: number;
 
     constructor(public x: number, public y: number, public r: number) {
         this.x = x;
@@ -37,6 +38,7 @@ class Blob {
         this.lastTime = 0;
         this.interval = 1;
         this.timer = 0;
+        this.zoom = 25/r;
     }
 
     draw() {
@@ -77,8 +79,14 @@ class Blob {
             }
 
             if (ctx) {
+                this.zoom = 25 / this.r;
+
+                this.speed = 5 / this.zoom;
+
                 ctx.resetTransform();
                 ctx.restore();
+                // ctx.translate(-canvas.width / 2, - canvas.height / 2);
+                // ctx.scale(zoom, zoom);
                 ctx.translate(wWidth / 2 - this.x, wHeight / 2 - this.y);
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = '#000000';
@@ -109,9 +117,11 @@ class Blob {
         }
 
         if (dX < blob.r + this.r && dY < blob.r + this.r) {
-            this.r += blob.r;
+            const sum = Math.PI * this.r * this.r + Math.PI * blob.r * blob.r;
+
+            this.r = Math.sqrt(sum / Math.PI);
             return true;
-        }else{
+        } else {
             return false;
         }
     }
