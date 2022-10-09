@@ -2,6 +2,8 @@ defmodule SocketWeb.GameChannel do
   use SocketWeb, :channel
 
   @impl true
+  @spec join(<<_::80>>, nil | maybe_improper_list | map, Phoenix.Socket.t()) ::
+          {:ok, Phoenix.Socket.t()}
   def join("game:lobby", _payload, socket) do
     IO.puts("New connection")
 
@@ -9,18 +11,8 @@ defmodule SocketWeb.GameChannel do
   end
 
   @impl true
-  def handle_in("join", payload, socket) do
-    broadcast(socket, "join", payload)
-    # players = []
-
-    # Enum.concat(players, [payload["blob"]])
-
-    {:noreply, socket}
-  end
-
-  @impl true
-  def handle_in("shout", payload, socket) do
-    broadcast(socket, "shout", payload)
+  def handle_in("move", payload, socket) do
+    broadcast(socket, "move", payload)
     {:noreply, socket}
   end
 end

@@ -1,7 +1,7 @@
 import Blob from './blob';
 import { drawGrid } from './grid';
 import { genRandBetween } from './utils/genRandBetween';
-import socket from '../js/user_socket';
+import socket, { channel } from '../js/user_socket';
 
 const docCanvas = document.getElementById('canvas');
 
@@ -34,20 +34,7 @@ const game = () => {
 
     player.update(0);
 
-    let channel = socket.channel('game:lobby', {});
-    channel
-        .join()
-        .receive('ok', (resp) => {
-            console.log('Joined successfully', resp);
-        })
-        .receive('error', (resp) => {
-            console.log('Unable to join', resp);
-        });
-
-    channel.push('join', { blob: player });
-    channel.on('join', (payload) => {
-        const newBlob: Blob = payload.blob;
-    });
+    player.brodcast();
 
     incBlobs();
 };
@@ -92,5 +79,48 @@ const drawBlobs = (blob: Blob) => {
     }
 };
 
+const drawPlayers = () => {
+    for (let i = players.length - 1; i > 0; i--) {
+        const player = players[i];
+
+        player.draw();
+
+        console.log(player)
+
+        // if (blob.eats(nBlob)) {
+        //     players.splice(i, 1);
+        // }
+    }
+}
+
+const updatePlayer = (newPlayer: Blob) => {
+    const foundPlayers = players.filter((p) => p.id === newPlayer.id);
+
+    if (foundPlayers.length >= 1) {
+        players = players.map((player) => {
+            if (player.id === newPlayer.id) {
+                const nPlayer = new Blob(newPlayer.x, newPlayer.y, newPlayer.r, newPlayer.id)
+
+                nPlayer.draw();
+
+                return nPlayer
+            }
+
+            return player;
+        });
+    } else {
+        const nPlayer = new Blob(newPlayer.x, newPlayer.y, newPlayer.r, newPlayer.id)
+
+        nPlayer.draw();
+
+        players.push(nPlayer);
+    }
+
+    console.log(players)
+
+    drawPlayers();
+};
+
 export default game;
-export { blobs, drawBlobs, wWidth, wHeight, P, players };
+export { blobs, drawBlobs, wWidth, wHeight, P, players, updatePlayer };
+

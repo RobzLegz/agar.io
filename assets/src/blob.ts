@@ -1,4 +1,13 @@
-import { blobs, drawBlobs, P, players, wHeight, wWidth } from './app';
+import { channel } from '../js/user_socket';
+import {
+    blobs,
+    drawBlobs,
+    P,
+    players,
+    updatePlayer,
+    wHeight,
+    wWidth,
+} from './app';
 import { getColor } from './colors';
 import { genId } from './utils/genId';
 
@@ -32,9 +41,13 @@ class Blob {
     timer: number;
     zoom: number;
     color: string;
-    id: number;
 
-    constructor(public x: number, public y: number, public r: number) {
+    constructor(
+        public x: number,
+        public y: number,
+        public r: number,
+        public id: string = genId()
+    ) {
         this.x = x;
         this.y = y;
         this.r = r;
@@ -44,7 +57,7 @@ class Blob {
         this.timer = 0;
         this.zoom = 25 / r;
         this.color = getColor();
-        this.id = genId(players);
+        this.id = id;
     }
 
     draw() {
@@ -158,6 +171,27 @@ class Blob {
         } else {
             return false;
         }
+    }
+
+    brodcast() {
+        let prevX: number | null = null;
+        let prevY: number | null = null;
+
+        setInterval(() => {
+            channel.push('move', { blob: this });
+            channel.on('move', (payload) => {
+                const newBlob: Blob = payload.blob;
+
+                if (
+                    newBlob.id !== this.id &&
+                    (newBlob.x !== prevX || newBlob.y !== prevY)
+                ) {
+                    updatePlayer(newBlob);
+                    prevX = newBlob.x;
+                    prevY = newBlob.y;
+                }
+            });
+        }, 1000);
     }
 }
 
