@@ -1,6 +1,7 @@
 import Blob from './blob';
 import { drawGrid } from './grid';
 import { genRandBetween } from './utils/genRandBetween';
+import socket from '../js/user_socket';
 
 const docCanvas = document.getElementById('canvas');
 
@@ -15,6 +16,7 @@ const wHeight = innerHeight;
 const P = 300;
 
 let blobs: Blob[] = [];
+let players: Blob[] = [];
 
 window.addEventListener('resize', () => {
     setup();
@@ -23,10 +25,29 @@ window.addEventListener('resize', () => {
 const game = () => {
     setup();
 
-    const blob = new Blob(wWidth / 2, wHeight / 2, 25);
-    blob.draw();
+    const player = new Blob(
+        genRandBetween(P, canvas.width - P),
+        genRandBetween(P, canvas.height - P),
+        25
+    );
+    player.draw();
 
-    blob.update(0);
+    player.update(0);
+
+    let channel = socket.channel('game:lobby', {});
+    channel
+        .join()
+        .receive('ok', (resp) => {
+            console.log('Joined successfully', resp);
+        })
+        .receive('error', (resp) => {
+            console.log('Unable to join', resp);
+        });
+
+    channel.push('join', { blob: player });
+    channel.on('join', (payload) => {
+        const newBlob: Blob = payload.blob;
+    });
 
     incBlobs();
 };
@@ -67,9 +88,9 @@ const drawBlobs = (blob: Blob) => {
 
         if (blob.eats(nBlob)) {
             blobs.splice(i, 1);
-        } 
+        }
     }
 };
 
 export default game;
-export { blobs, drawBlobs, wWidth, wHeight, P };
+export { blobs, drawBlobs, wWidth, wHeight, P, players };

@@ -1,5 +1,6 @@
-import { blobs, drawBlobs, P, wHeight, wWidth } from './app';
+import { blobs, drawBlobs, P, players, wHeight, wWidth } from './app';
 import { getColor } from './colors';
+import { genId } from './utils/genId';
 
 const docCanvas = document.getElementById('canvas');
 
@@ -31,6 +32,7 @@ class Blob {
     timer: number;
     zoom: number;
     color: string;
+    id: number;
 
     constructor(public x: number, public y: number, public r: number) {
         this.x = x;
@@ -40,8 +42,9 @@ class Blob {
         this.lastTime = 0;
         this.interval = 1;
         this.timer = 0;
-        this.zoom = 25/r;
+        this.zoom = 25 / r;
         this.color = getColor();
+        this.id = genId(players);
     }
 
     draw() {
@@ -51,8 +54,6 @@ class Blob {
             ctx.fillStyle = this.color;
             ctx.fill();
             ctx.stroke();
-
-            
         }
     }
 
@@ -80,11 +81,14 @@ class Blob {
             if (ctx) {
                 this.zoom = 70 / this.r;
 
-                this.speed = 5 * this.zoom ;
+                this.speed = 5 * this.zoom;
 
                 ctx.resetTransform();
                 ctx.restore();
-                ctx.translate(wWidth / 2 - this.x * this.zoom, wHeight / 2 - this.y * this.zoom);
+                ctx.translate(
+                    wWidth / 2 - this.x * this.zoom,
+                    wHeight / 2 - this.y * this.zoom
+                );
                 // ctx.translate(wWidth / 2, wHeight / 2);
                 ctx.scale(this.zoom, this.zoom);
                 // ctx.translate(wWidth / 2 - this.x, wHeight / 2 - this.y);
@@ -105,6 +109,10 @@ class Blob {
     }
 
     eats(blob: Blob) {
+        if (blob.r > this.r) {
+            return false;
+        }
+
         let dX = this.x - blob.x;
         let dY = this.y - blob.y;
 
@@ -120,6 +128,32 @@ class Blob {
             const sum = Math.PI * this.r * this.r + Math.PI * blob.r * blob.r;
 
             this.r = Math.sqrt(sum / Math.PI);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    getsEaten(blob: Blob) {
+        if (blob.r < this.r) {
+            return false;
+        }
+
+        let dX = this.x - blob.x;
+        let dY = this.y - blob.y;
+
+        if (dX < 0) {
+            dX = -dX;
+        }
+
+        if (dY < 0) {
+            dY = -dY;
+        }
+
+        if (dX < blob.r + this.r && dY < blob.r + this.r) {
+            const sum = Math.PI * this.r * this.r + Math.PI * blob.r * blob.r;
+
+            blob.r = Math.sqrt(sum / Math.PI);
             return true;
         } else {
             return false;
